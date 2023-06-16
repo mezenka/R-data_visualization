@@ -1,0 +1,92 @@
+---
+title: "diamond_dataset_viz"
+author: "Denis Mezenko"
+date: '2023-06-16'
+output: html_document
+---
+
+
+## (1) Setting up environment
+```{r}
+install.packages("tidyverse")
+install.packages("dplyr")
+install.packages("ggplot2")
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+
+
+## (2) Explore data in the Diamonds dataset  
+```{r}
+head(diamonds)
+```
+
+
+```{r}
+colnames(diamonds)
+```
+
+```{r}
+arrange(diamonds,desc(cut))
+```
+
+
+```{r}
+filter(diamonds,color=="H")
+```
+
+
+## (3) Summarizing data  
+```{r}
+summarize(diamonds, max_carat = max(carat),min_carat = min(carat),mean_carat = mean(carat))
+```
+
+
+```{r}
+diamonds_summary1 <-
+  diamonds %>% 
+  group_by(cut) %>%
+  summarize(max_carat=max(carat),min_carat=min(carat),avg_carat=mean(carat),max_price=max(price),min_price=min(price),avg_price=mean(price))
+head(diamonds_summary1)
+```
+
+```{r}
+diamonds %>% 
+  group_by(cut, color) %>%
+  summarize(max_carat=max(carat),min_carat=min(carat),avg_carat=mean(carat),max_price=max(price),min_price=min(price),avg_price=mean(price))
+```
+
+
+## (4) Visualizing data 
+
+### Scatter plot 
+
+```{r}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+  geom_point()
+```
+
+
+
+### Separating variable groups and adding color using facet_wrap() function 
+
+```{r}
+ggplot(data = diamonds, aes(x = carat, y = price, color = cut)) +
+  geom_point() +
+  facet_wrap(~cut)
+```
+
+
+### Bar chart by variable group  
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = color, fill = cut)) + 
+  facet_wrap(~clarity)
+```
+
